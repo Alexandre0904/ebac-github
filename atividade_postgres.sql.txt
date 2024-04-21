@@ -1,0 +1,74 @@
+-- Table: public.customer
+
+-- DROP TABLE IF EXISTS public.customer;
+
+CREATE TABLE IF NOT EXISTS public.customer
+(
+    cpf text COLLATE pg_catalog."default",
+    email character varying(50) COLLATE pg_catalog."default" NOT NULL,
+    name character varying(30) COLLATE pg_catalog."default",
+    customer_id integer NOT NULL,
+    CONSTRAINT customer_pkey PRIMARY KEY (customer_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.customer
+    OWNER to postgres;
+
+-- Table: public.customer_order_1
+
+-- DROP TABLE IF EXISTS public.customer_order_1;
+
+CREATE TABLE IF NOT EXISTS public.customer_order_1
+(
+    value character varying(20) COLLATE pg_catalog."default",
+    customer_id integer,
+    CONSTRAINT fk_order_customer FOREIGN KEY (customer_id)
+        REFERENCES public.customer (customer_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.customer_order_1
+    OWNER to postgres;
+
+-- Table: public.product
+
+-- DROP TABLE IF EXISTS public.product;
+
+CREATE TABLE IF NOT EXISTS public.product
+(
+    product_id integer NOT NULL DEFAULT nextval('product_product_id_seq'::regclass),
+    name character varying(25) COLLATE pg_catalog."default" NOT NULL,
+    created_date timestamp without time zone NOT NULL DEFAULT now(),
+    CONSTRAINT product_pkey PRIMARY KEY (product_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.product
+    OWNER to postgres;
+
+-- Table: public.stock
+
+-- DROP TABLE IF EXISTS public.stock;
+
+CREATE TABLE IF NOT EXISTS public.stock
+(
+    id integer NOT NULL DEFAULT nextval('stock_id_seq'::regclass),
+    product_id integer NOT NULL,
+    quantity integer NOT NULL,
+    CONSTRAINT stock_pkey PRIMARY KEY (id),
+    CONSTRAINT fk_product_id FOREIGN KEY (product_id)
+        REFERENCES public.product (product_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.stock
+    OWNER to postgres;
